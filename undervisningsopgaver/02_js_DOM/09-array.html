@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <style>
+        body {
+            color: hotpink;
+        }
+
+        #display {
+            height: 20vw;
+            width: 20vw;
+            border: 2px solid gold;
+            margin: 7vw;
+            padding: 1vw;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="display"></div>
+
+    <script>
+        let playlist = ["Graveyard", "Mean it", "Boasty", "John Oliver", "Sucker for you", "Happy", "China", "Lose control", "Body", "Dance"];
+        playlist.forEach(sang => {
+            document.querySelector("#display").innerHTML += `${sang} <br>`;
+        })
+    </script>
+</body></html>
