@@ -9,28 +9,15 @@
 </head>
 
 <body>
-
     <script>
-        let længde = prompt("Angiv længde");
-        let bredde = prompt("Angiv bredde");
+        let timer = 3;
+        let co2 = 109;
+        let co2UdledtIKgVedFlyrejse = timer * co2;
+        let resultat = `Ved ${timer} timers flyrejse har du udledt ${co2UdledtIKgVedFlyrejse}kg CO2`;
 
-        function areal(l, b) {
-            let a = (l * b);
-            if (a == 0) {
-                return (`Husk længde og bredde skal være tal.\n Prøv igen`)
-            } else if (isNaN(a)) {
-                return (`Fejl.\n Prøv igen med tal`)
-            } else {
-                return ('Arealet er ${a}. \n Vil du lave et nyt areal?')
-            }
-        }
+        console.log(resultat);
 
-        let resultat = areal(længde, bredde);
-
-        confirm(resultat);
-
-        if (confirm) {
-            location.reload();
-        }
     </script>
-</body></html>
+</body>
+
+</html>
