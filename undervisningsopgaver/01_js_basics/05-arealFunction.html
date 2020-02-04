@@ -27,8 +27,17 @@
 
             let resultat = `Arealet er ${areal(længde, bredde)} kvadratmeter`;
 
+
             console.log(resultat);
+
+
+            if (isNaN(længde) == true || isNaN(bredde) == true) {
+                resultat = "Den er gal"
+            } else {
+                resultat = længde * bredde;
+            }
         }
+
 
         function areal(l, b) {
             return (l * b);
