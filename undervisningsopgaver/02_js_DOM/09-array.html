@@ -6,7 +6,7 @@
     <title>Document</title>
 
     <style>
-        body {
+        /*       body {
             color: hotpink;
         }
 
@@ -16,18 +16,31 @@
             border: 2px solid gold;
             margin: 7vw;
             padding: 1vw;
-        }
+        }*/
+
     </style>
 </head>
 
 <body>
 
-    <div id="display"></div>
+    <!--    <div id="display"></div>-->
+    <ol id="display">
+    </ol>
 
     <script>
         let playlist = ["Graveyard", "Mean it", "Boasty", "John Oliver", "Sucker for you", "Happy", "China", "Lose control", "Body", "Dance"];
-        playlist.forEach(sang => {
-            document.querySelector("#display").innerHTML += `${sang} <br>`;
+        playlist.forEach(song => {
+
+            let element = document.createElement("li");
+            let mySong = document.createTextNode(song);
+
+            element.appendChild(mySong);
+
+            document.querySelector("#display").appendChild(element);
+            /*document.querySelector("#display").innerHTML += `${sang} <br>`;*/
         })
+
     </script>
-</body></html>
+</body>
+
+</html>
