@@ -11,29 +11,37 @@
 </body>
 
 <article id="dyr">
-    <h3>Gris</h3>
+    <p>
+    </p>
     <img src="http://mabe-kea.dk/E19/pics/pig.png" alt="gris">
 
 
 </article>
 
 
+
 <script>
-    /*   document.addEventListener("DOMContentLoaded", start);*/
-    const dyr = {
-        "navn": "Gris",
-        "type": "Pattedyr",
-        "levested": "Svinefarme",
-        "billede": "http://mabe-kea.dk/E19/pics/pig.png"
+    document.addEventListener("DOMContentLoaded", start);
+
+    function start(); {
+
+
+        const dyr = {
+            "navn": "gris",
+            "type": "pattedyr",
+            "levested": "svinefarme",
+            "billede": "http://mabe-kea.dk/E19/pics/pig.png"
+
+        }
+        console.log(dyr);
+
+        const destination = document.querySelector("dyr");
+        destination.querySelector("p").textContent = dyr.pattedyr;
+        destination.querySelector("p").textContent = dyr.gris;
+        destination.querySelector("p").textContent = dyr.svinefarme;
+        destination.querySelector("img").src = dyr.billede;
+
 
     }
-
-
-    const destination = document.querySelector("dyr");
-    destination.querySelector("p").textContent = pattedyr;
-    destination.querySelector("p").textContent = Gris;
-    destination.querySelector("p").textContent = Svinefarme;
-    destination.querySelector("img").src = dyr.billede;
-    console.log(dyr);
 </script></html>
 
