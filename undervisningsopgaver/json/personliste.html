@@ -9,6 +9,16 @@
 </head>
 
 <style>
+    nav {
+
+        text-align: center;
+        padding: 18px;
+    }
+
+    nav .valgt {
+        background-color: red;
+    }
+
     article {
         border: 1px solid black;
     }
@@ -24,7 +34,20 @@
         margin: 0 auto;
         grid-gap: 10px;
     }
+
+    h1 {
+        text-align: center;
+    }
 </style>
+
+<h1>Alle</h1>
+<nav class="menu">
+    <button class="filter valgt" data-sex="alle">Alle</button>
+    <button class="filter" data-sex="m">Mænd</button>
+    <button class="filter" data-sex="k">Kvinder</button>
+    <button class="filter" data-sex="andet">Andet</button>
+</nav>
+
 
 <body>
 
@@ -50,11 +73,15 @@
     <script>
         const endpoint = "https://spreadsheets.google.com/feeds/list/1XWWbfWszD7f4jHqp51V_oT3pkHuR-ceEUw4YtrvK7F0/od6/public/values?alt=json";
         let personer = [];
+        let filter = "alle";
+        const container = document.querySelector("main");
+        const personerTemplate = document.querySelector("template");
 
         document.addEventListener("DOMContentLoaded", start);
 
         function start() {
             hentData();
+            addEventListenersButtons();
         }
 
         async function hentData() {
@@ -68,27 +95,47 @@
         //data fra array ligger i json fil - alledyr.json
 
         function visPersoner() {
+            container.innerHTML = "";
 
-            const container = document.querySelector("main");
-            const personerTemplate = document.querySelector("template");
 
             personer.feed.entry.forEach((person) => {
-                let klon = personerTemplate.cloneNode(true).content;
-                klon.querySelector(".id").textContent = person.gsx$id.$t;
-                klon.querySelector("h2").textContent = person.gsx$navn.$t;
-                klon.querySelector(".efternavn").textContent = person.gsx$efternavn.$t;
-                klon.querySelector(".sex").textContent = person.gsx$sex.$t;
-                klon.querySelector(".alder").textContent = person.gsx$alder.$t;
-                klon.querySelector(".religion").textContent = person.gsx$religion.$t;
-                klon.querySelector(".hobby").textContent = person.gsx$hobby.$t;
-                klon.querySelector("img").src = person.gsx$billede.$t;
-                klon.querySelector(".kaeledyr").textContent = person.gsx$kaeledyr.$t;
-                klon.querySelector(".job").textContent = person.gsx$job.$t;
-                klon.querySelector(".by").textContent = person.gsx$by.$t;
-                klon.querySelector(".rpc").textContent = person.gsx$rpc.$t;
+                if (filter == "alle" || filter == person.gsx$sex.$t) {
+                    /*                if (person.gsx$sex.$t == filter) {*/
+                    let klon = personerTemplate.cloneNode(true).content;
+                    klon.querySelector(".id").textContent = person.gsx$id.$t;
+                    klon.querySelector("h2").textContent = person.gsx$navn.$t;
+                    klon.querySelector(".efternavn").textContent = person.gsx$efternavn.$t;
+                    klon.querySelector(".sex").textContent = person.gsx$sex.$t;
+                    klon.querySelector(".alder").textContent = person.gsx$alder.$t;
+                    klon.querySelector(".religion").textContent = person.gsx$religion.$t;
+                    klon.querySelector(".hobby").textContent = person.gsx$hobby.$t;
+                    klon.querySelector("img").src = person.gsx$billede.$t;
+                    klon.querySelector(".kaeledyr").textContent = person.gsx$kaeledyr.$t;
+                    klon.querySelector(".job").textContent = person.gsx$job.$t;
+                    klon.querySelector(".by").textContent = person.gsx$by.$t;
+                    klon.querySelector(".rpc").textContent = person.gsx$rpc.$t;
 
-                container.appendChild(klon);
+                    container.appendChild(klon);
+                }
             })
+        }
+
+
+        function addEventListenersButtons() {
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.addEventListener("click", filtrering);
+            })
+        }
+
+        function filtrering() {
+            console.log("FILTER");
+            filter = this.dataset.sex;
+            document.querySelector("h1").textContent = this.textContent;
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.classList.remove("valgt");
+            })
+            this.classList.add("valgt");
+            visPersoner();
         }
     </script>
 </body></html>
