@@ -8,24 +8,34 @@
     <link rel="stylesheet" href="">
 </head>
 
+
+<nav>
+    <h1>Alle</h1>
+    <button class="filter valgt" data-sex="alle">Alle</button>
+    <button class="filter" data-sex="m">Mænd</button>
+    <button class="filter" data-sex="k">Kvinder</button>
+    <button class="filter" data-sex="andet">Andet</button>
+    <button class="filter" data-sex="andet">Alder</button>
+</nav>
+
+
 <style>
     nav {
-
+        flex-direction: row;
         text-align: center;
-        padding: 18px;
+        padding: 20px;
     }
 
-    button {
-        font-size: 1rem;
-    }
 
     nav .valgt {
-        background-color: lightgray;
+        background-color: beige;
     }
 
+
+
     article {
-        border: 0.5px solid black;
-        background-color: beige;
+        border: 1px solid black;
+        //*background-color: lightcyan;*//
     }
 
     img {
@@ -40,26 +50,18 @@
         grid-gap: 10px;
     }
 
-    h1 {
-        text-align: center;
-    }
 
+    button {
+        //* border: ;*//
+        width: 5rem;
+        height: 2rem;
+
+    }
 </style>
 
-<h1>Alle</h1>
-<nav class="menu">
-    <button class="filter valgt" data-sex="alle">Alle</button>
-    <button class="filter" data-sex="m">Mænd</button>
-    <button class="filter" data-sex="k">Kvinder</button>
-    <button class="filter" data-sex="andet">Andet</button>
-</nav>
-
-
 <body>
-    <!--    <section id="liste"></section>-->
 
     <template>
-
         <article class="person">
             <h2></h2>
             <p class="id"></p>
@@ -74,7 +76,6 @@
             <p class="rpc"></p>
             <img src="" alt="">
         </article>
-
     </template>
 
     <main></main>
@@ -83,14 +84,16 @@
         const endpoint = "https://spreadsheets.google.com/feeds/list/1XWWbfWszD7f4jHqp51V_oT3pkHuR-ceEUw4YtrvK7F0/od6/public/values?alt=json";
         let personer = [];
         let filter = "alle";
+        let tal = 55;
         const container = document.querySelector("main");
         const personerTemplate = document.querySelector("template");
+
 
         document.addEventListener("DOMContentLoaded", start);
 
         function start() {
             hentData();
-            addEventListenersButtons();
+            addEventListnerToButtons();
         }
 
         async function hentData() {
@@ -99,18 +102,18 @@
             personer = await response.json();
             console.log(personer);
             visPersoner();
+
         }
 
-        //data fra array ligger i json fil - alledyr.json
+
+
+
 
         function visPersoner() {
             container.innerHTML = "";
-
-
             personer.feed.entry.forEach((person) => {
-                if (filter == "alle" || filter == person.gsx$sex.$t) {
-                    /*                if (person.gsx$sex.$t == filter) {*/
-                    let klon = personerTemplate.cloneNode(true).content;
+                if ((filter == "alle" && tal >= 55) || (filter == person.gsx$sex.$t && tal <= parseInt(person.gsx$alder.$t))) {
+                    const klon = personerTemplate.cloneNode(true).content;
                     klon.querySelector(".id").textContent = person.gsx$id.$t;
                     klon.querySelector("h2").textContent = person.gsx$navn.$t;
                     klon.querySelector(".efternavn").textContent = person.gsx$efternavn.$t;
@@ -124,20 +127,27 @@
                     klon.querySelector(".by").textContent = person.gsx$by.$t;
                     klon.querySelector(".rpc").textContent = person.gsx$rpc.$t;
 
+                    console.log(parseInt(person.gsx$alder.$t));
+
                     container.appendChild(klon);
+
                 }
             })
+
         }
 
-
-        function addEventListenersButtons() {
+        function addEventListnerToButtons() {
             document.querySelectorAll(".filter").forEach(elm => {
-                elm.addEventListener("click", filtrering);
+                elm.addEventListener("click", filtering);
             })
+
+            document.querySelector(".aldersFilterBTN").addEventListener("click", aldersFiltering);
+
         }
 
-        function filtrering() {
-            console.log("FILTER");
+
+        function filtering() {
+            //console.log("FILTER");
             filter = this.dataset.sex;
             document.querySelector("h1").textContent = this.textContent;
             document.querySelectorAll(".filter").forEach(elm => {
@@ -147,7 +157,12 @@
             visPersoner();
         }
 
+        function aldersFiltering() {
+            if (filterAlder == 0) {
+                filterAlder = 55;
+            } else {
+                filterAlder = 0;
+            }
+        }
     </script>
-</body>
-
-</html>
+</body></html>

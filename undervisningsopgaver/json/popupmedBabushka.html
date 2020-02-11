@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bistro BABUSHKA</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Oswald|Poppins:700|Source+Sans+Pro&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Questrial&display=swap" rel="stylesheet">
+</head>
+
+<style>
+    body {
+        background-color: #fff6eb;
+    }
+
+    nav {
+        text-align: center;
+        padding: 16px;
+        margin-top: 0vw;
+    }
+
+
+    nav .valgt {
+        background-color: #fffff5;
+
+    }
+
+    button {
+        font-size: 1rem;
+        padding: 18px;
+
+        font-family: Brandon Grotesque;
+        border: none;
+        cursor: pointer;
+        background-color: transparent;
+        text-transform: uppercase;
+    }
+
+
+    article {
+        border: 0.5px solid black;
+        background-color: #fffff5;
+        border: none;
+        padding: 16px;
+    }
+
+    img {
+        width: 100%;
+    }
+
+    main {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        max-width: 1000px;
+        margin: 0 auto;
+        grid-gap: 10px;
+    }
+
+    h1 {
+        font-size: 2rem;
+        text-align: center;
+        font-family: Brandon Grotesque;
+        text-transform: uppercase;
+        font-weight: 400;
+        margin-top: 16px;
+        margin-bottom: 10px;
+    }
+
+    h2 {
+        font-family: 'Questrial', sans-serif;
+        font-family: Avenir;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    p {
+        font-family: 'Questrial', sans-serif;
+        font-family: Avenir;
+        line-height: 22px;
+    }
+
+
+    #detalje {
+        position: fixed;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 10;
+    }
+
+    #detalje button {
+        color: white;
+        font-size: 1.5rem;
+        margin: 0.5em;
+    }
+
+    .skjul {
+        display: none;
+    }
+
+    #mad {
+        margin: 3em;
+        padding: 2em;
+        background-color: #fffff5;
+        cursor: pointer;
+    }
+
+</style>
+
+<div id="logo">
+    <img src="logo.svg" alt="logo">
+</div>
+
+<nav class="menu">
+    <button class="filter valgt" data-ret="alle">Alle</button>
+    <button class="filter" data-ret="forretter">Forretter</button>
+    <button class="filter" data-ret="hovedretter">Hovedretter</button>
+    <button class="filter" data-ret="desserter">Desserter</button>
+    <button class="filter" data-ret="sideorders">Sideorders</button>
+    <button class="filter" data-ret="drikkevarer">Drikkevarer</button>
+
+    <h1>Alle</h1>
+</nav>
+
+
+
+<body>
+
+
+    <template>
+
+        <article class="madogdrikke">
+            <h2></h2>
+            <p class="id"></p>
+            <img src="" alt="">
+
+            <p class="kategori"></p>
+            <!--            <p class="navn"></p>-->
+            <p class="kort"></p>
+            <p class="pris"></p>
+            <p class="lang"></p>
+            <p class="oprindelse"></p>
+        </article>
+
+    </template>
+
+    <section id="detalje" class="skjul">
+        <button>x</button>
+        <article id="mad">
+            <h1>Navn</h1>
+            <p>LAND</p>
+        </article>
+    </section>
+
+    <main></main>
+
+    <script>
+        const endpoint = "https://spreadsheets.google.com/feeds/list/17Dd7DvkPaFamNUdUKlrFgnH6POvBJXac7qyiS6zNRw0/od6/public/values?alt=json";
+        let menukort = [];
+        let filter = "alle";
+        const container = document.querySelector("main");
+        const menukortTemplate = document.querySelector("template");
+        const detalje = document.querySelector("#detalje");
+
+
+        document.addEventListener("DOMContentLoaded", start);
+
+        function start() {
+            hentData();
+            addEventListenersToButtons();
+        }
+
+        async function hentData() {
+            const response = await fetch(endpoint);
+            console.log(response);
+            menukort = await response.json();
+            console.log(menukort);
+            visMenukort();
+
+        }
+
+        //data fra array ligger i json fil - alledyr.json
+
+        function visMenukort() {
+            container.innerHTML = "";
+
+
+            menukort.feed.entry.forEach((madogdrikke) => {
+                if (filter == "alle" || filter == madogdrikke.gsx$kategori.$t) {
+                    let klon = menukortTemplate.cloneNode(true).content;
+                    klon.querySelector("img").src = `imgs/small/${madogdrikke.gsx$billede.$t}-sm.jpg`;
+
+                    klon.querySelector("h2").textContent = madogdrikke.gsx$navn.$t;
+
+                    klon.querySelector(".pris").textContent = `Pris: ${madogdrikke.gsx$pris.$t},-`;
+                    klon.querySelector(".kort").textContent = madogdrikke.gsx$kort.$t;
+
+
+                    klon.querySelector(".madogdrikke").addEventListener("click", () => {
+                        visDetalje(madogdrikke)
+                    });
+                    /*           klon.querySelector(".lang").textContent = madogdrikke.gsx$lang.$t;*/
+                    /*        klon.querySelector(".oprindelse").textContent = madogdrikke.gsx$oprindelse.$t;*/
+
+
+
+                    container.appendChild(klon);
+                }
+            })
+        }
+
+        function visDetalje(mad) {
+            detalje.classList.remove("skjul");
+            detalje.querySelector("button").addEventListener("click", () => detalje.classList.add("skjul"));
+            console.log(mad.gsx$navn.$t);
+        }
+
+        function addEventListenersToButtons() {
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.addEventListener("click", filtrering);
+            })
+        }
+
+        function filtrering() {
+            console.log("FILTER");
+            filter = this.dataset.ret;
+            document.querySelector("h1").textContent = this.textContent;
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.classList.remove("valgt");
+            })
+            this.classList.add("valgt");
+            visMenukort();
+
+        }
+
+    </script>
+</body>
+
+</html>
